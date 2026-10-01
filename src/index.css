@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+/* Theme variables toggled by data-mode on the root wrapper or container */
+[data-mode="student"] {
+  --bg: #04060d;
+  --text: #f4f6fb;
+  --muted: #8d95a8;
+  --accent: #8fb4ff;
+  --border: rgba(255, 255, 255, 0.16);
+  --border-focus: rgba(143, 180, 255, 0.6);
+  --radius-input: 999px;
+  --radius-btn: 999px;
+  --font-family: 'Geist', sans-serif;
+  --glow-color: rgba(143, 180, 255, 0.22);
+  --card-bg: rgba(6, 10, 20, 0.78);
+  --input-bg: rgba(255, 255, 255, 0.04);
+  --input-bg-focus: rgba(255, 255, 255, 0.08);
+}
+
+[data-mode="admin"] {
+  --bg: #0b0704;
+  --text: #fbf3e6;
+  --muted: #a3917a;
+  --accent: #ffb040;
+  --border: rgba(255, 176, 64, 0.28);
+  --border-focus: rgba(255, 176, 64, 0.7);
+  --radius-input: 6px;
+  --radius-btn: 6px;
+  --font-family: 'Space Grotesk', sans-serif;
+  --glow-color: rgba(255, 176, 64, 0.18);
+  --card-bg: rgba(18, 12, 8, 0.82);
+  --input-bg: rgba(255, 176, 64, 0.04);
+  --input-bg-focus: rgba(255, 176, 64, 0.08);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #04060d;
+  overflow-x: hidden;
+  font-family: var(--font-family, 'Geist', sans-serif);
+}
+
+/* CSS Custom Property registration for smooth color interpolation where supported */
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #04060d;
+}
+
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #8fb4ff;
+}
+
+@property --border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.16);
+}
+
+@property --border-focus {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(143, 180, 255, 0.6);
+}
+
+@property --glow-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(143, 180, 255, 0.22);
+}
+
+@property --card-bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(6, 10, 20, 0.65);
+}
+
+/* Card glassmorphism effect with 600ms theme transition */
+.frosted-glass {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.65), 0 0 35px -5px var(--glow-color);
+  transition:
+    background-color 600ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 600ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 600ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Master 600ms theme transition utility for accent colors, borders, and radius */
+.theme-transition-600 {
+  transition:
+    background-color 600ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 600ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 600ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 600ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Error card shake */
+@keyframes shake-card {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: shake-card 0.4s ease-in-out;
+}
+
+/* Horizontal scan line for admin */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.admin-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 176, 64, 0.35), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Card pointer glow for desktop cards */
+.card-pointer-glow {
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+@media (hover: none) or (pointer: coarse) {
+  .card-pointer-glow {
+    display: none !important;
+  }
+}
+
+/* Staggered entrance animation for dashboard sections on initial page load */
+@keyframes dashboard-section-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-stagger-section {
+  animation: dashboard-section-entrance 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--stagger-delay, 0ms);
+}
+
+/* Reduced motion accessibility overrides */
+@media (prefers-reduced-motion: reduce) {
+  .admin-scanline {
+    animation: none !important;
+    opacity: 0.12 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .animate-shake {
+    animation: none !important;
+  }
+
+  .card-pointer-glow {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  .dashboard-stagger-section {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Accessible global focus-visible outline for keyboard navigation */
+:focus-visible,
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 12px var(--glow-color) !important;
+}
+
+button:focus:not(:disabled),
+[role="button"]:focus:not(:disabled),
+input:focus:not(:disabled),
+select:focus:not(:disabled),
+a:focus:not(:disabled) {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 14px var(--glow-color) !important;
+}
+
+
+
